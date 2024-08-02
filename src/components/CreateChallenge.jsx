@@ -1,160 +1,264 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect , useContext } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ChallengeContext } from '../context/ChallengeContext';
 import { v4 as uuidv4 } from 'uuid';
-import { useLocation  } from 'react-router-dom'; 
+import { useLocation } from 'react-router-dom'; 
 
 const CreateChallenge = ({ closeModal }) => {
-    const [id, setId] = useState(uuidv4());
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [frequency, setFrequency] = useState('daily');
-    const [daysPerWeek, setDaysPerWeek] = useState(0);
-    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-    const [activeDatePicker, setActiveDatePicker] = useState(null);
-    const [errors, setErrors] = useState({});
+    const [id , setId] = useState(uuidv4());
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [frequency, setFrequency] = useState('daily');
+  const [daysPerWeek, setDaysPerWeek] = useState(0);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [activeDatePicker, setActiveDatePicker] = useState(null);
+  const [errors, setErrors] = useState({});
 
-    const { addChallenge, challenges, updateChallenge } = useContext(ChallengeContext);
+  const { addChallenge , challenges , updateChallenge } = useContext(ChallengeContext);
 
+  const datePickerRef = useRef(null);
 
-    const datePickerRef = useRef(null);
+  const { state } = useLocation();
 
-    const { state } = useLocation();
-
-    useEffect(() => {
-        if (state?.challengeId) {
-            const challengeToEdit = challenges.find(challenge => challenge.id === state.challengeId);
-            if (challengeToEdit) {
-                setId(challengeToEdit.id);
-                setTitle(challengeToEdit.title);
-                setDescription(challengeToEdit.description);
-                setStartDate(new Date(challengeToEdit.startDate));
-                setEndDate(new Date(challengeToEdit.endDate));
-                setFrequency(challengeToEdit.frequency);
-                setDaysPerWeek(challengeToEdit.daysPerWeek);
-            }
+  useEffect(() => {
+    if (state?.challenge) {
+        const challengeToEdit = challenges.find(challenge => challenge.id === state.challenge.id);
+        if (challengeToEdit) {
+            setId(challengeToEdit.id);
+            setTitle(challengeToEdit.title);
+            setDescription(challengeToEdit.description);
+            setStartDate(new Date(challengeToEdit.startDate));
+            setEndDate(new Date(challengeToEdit.endDate));
+            setFrequency(challengeToEdit.frequency);
+            setDaysPerWeek(challengeToEdit.daysPerWeek);
         }
-    }, [state?.challengeId, challenges]);
+    }
+}, [state?.challenge, challenges]);
 
-    const handleClickOutside = (event) => {
-        if (
-            isDatePickerOpen &&
-            datePickerRef.current &&
-            !datePickerRef.current.contains(event.target)
-        ) {
-            setIsDatePickerOpen(false);
-            setActiveDatePicker(null);
-        }
+
+  const handleClickOutside = (event) => {
+    if (
+      isDatePickerOpen &&
+      datePickerRef.current &&
+      !datePickerRef.current.contains(event.target)
+    ) {
+      setIsDatePickerOpen(false);
+      setActiveDatePicker(null);
+    }
+  };
+
+  useEffect(() => {
+    if (isDatePickerOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [isDatePickerOpen]);
 
-    useEffect(() => {
-        if (isDatePickerOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
+  const formatDate = (date) => {
+    if (!date) return "Select Date";
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
 
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isDatePickerOpen]);
+  const validateFields = () => {
+    const newErrors = {};
+    if (!title.trim()) newErrors.title = "Title is required";
+    if (!description.trim()) newErrors.description = "Description is required";
+    if (frequency === 'weekly' && daysPerWeek === 0) newErrors.daysPerWeek = "Days per week are required";
+    if (!startDate) newErrors.startDate = "Start date is required";
+    if (!endDate) newErrors.endDate = "End date is required";
+    return newErrors;
+  };
 
-    const formatDate = (date) => {
-        if (!date) return "Select Date";
-        const month = ("0" + (date.getMonth() + 1)).slice(-2);
-        const day = ("0" + date.getDate()).slice(-2);
-        const year = date.getFullYear();
-        return `${month}/${day}/${year}`;
-    };
+  
 
-    const validateFields = () => {
-        const newErrors = {};
-        if (!title.trim()) newErrors.title = "Title is required";
-        if (!description.trim()) newErrors.description = "Description is required";
-        if (frequency === 'weekly' && daysPerWeek === 0) newErrors.daysPerWeek = "Days per week are required";
-        if (!startDate) newErrors.startDate = "Start date is required";
-        if (!endDate) newErrors.endDate = "End date is required";
-        return newErrors;
-    };
+  const handleSaveTask = async (event) => {
+    event.preventDefault();
 
-    const handleSaveTask = async (event) => {
-        event.preventDefault();
+    const validationErrors = validateFields();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      setErrors({});
+      const newTask = {
+        id,
+        title,
+        description,
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate),
+        frequency,
+        daysPerWeek,
+        status: 'Active',
+        progress: [],
+        
+      };
 
-        const validationErrors = validateFields();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-        } else {
-            setErrors({});
-            const newTask = {
-                id,
-                title,
-                description,
-                startDate: formatDate(startDate),
-                endDate: formatDate(endDate),
-                frequency,
-                daysPerWeek,
-                status: 'Active',
-                progress: [],
-            };
+      if (state?.challenge) {
+        updateChallenge(id, newTask); // Update the existing challenge
+    } else {
+        addChallenge(newTask); // Add a new challenge
+    }
+closeModal();
+    }
+  };
 
-            if (state?.challengeId) {
-                updateChallenge(id, newTask); // Update the existing challenge
-            } else {
-                addChallenge(newTask); // Add a new challenge
-            }
-            closeModal();
-        }
-    };
-
-    return (
-        <div className="task-modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
-            <div className="task-modal-content bg-white rounded-lg shadow-lg w-[644px] h-[596px] p-6 flex flex-col justify-between relative">
-                <form className="flex flex-col flex-grow" onSubmit={handleSaveTask}>
-                    {/* Form fields here */}
-                    {/* ... */}
-                    <div className="task-modal-actions mt-4">
-                        <div className="task-modal-buttons flex gap-[17rem]">
-                            <button
-                                type="button"
-                                className="task-cancel border border-solid border-[#CF3636] w-40 h-11 text-[#CF3636] py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline font-bold shadow-lg"
-                                onClick={closeModal}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="task-save w-40 h-11 bg-[#17A2B8] text-white py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-bold"
-                            >
-                                Save
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                {isDatePickerOpen && (
-                    <div
-                        ref={datePickerRef}
-                        className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
-                    >
-                        <DatePicker
-                            selected={activeDatePicker === 'startDate' ? startDate : endDate}
-                            onChange={(date) => {
-                                if (activeDatePicker === 'startDate') {
-                                    setStartDate(date);
-                                } else {
-                                    setEndDate(date);
-                                }
-                                setIsDatePickerOpen(false);
-                            }}
-                            inline
-                        />
-                    </div>
-                )}
+  return (
+    <div className="task-modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
+      <div className="task-modal-content bg-white rounded-lg shadow-lg w-[644px] h-[596px] p-6 flex flex-col justify-between relative">
+        <form className="flex flex-col flex-grow" onSubmit={handleSaveTask}>
+          <div className="flex-grow">
+            <div className="task-title mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="title"
+                type="text"
+                placeholder="Enter Challenge Title"
+                className="task-title-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+              />
+              {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
             </div>
-        </div>
-    );
+
+            <div className="task-description mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                Description <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="description"
+                type="text"
+                placeholder="Enter Challenge Description"
+                className="task-description-input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+              {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+            </div>
+
+            <div className="task-dates mt-8 flex flex-row mb-4 gap-4">
+              <div className="flex items-center mb-4">
+                <label className="text-gray-700 text-sm font-bold mr-2" htmlFor="startDate">
+                  Start Date <span className="text-red-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  className="task-start-date w-48 h-11 border border-solid-[2px] border-[#E2E2E2] hover:bg-gray-300 py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-semibold text-[#707070]"
+                  onClick={() => { setIsDatePickerOpen(!isDatePickerOpen); setActiveDatePicker('startDate'); }}
+                >
+                  {formatDate(startDate)}
+                </button>
+              </div>
+
+              <div className="flex items-center mb-4" >
+                <label className="text-gray-700 text-sm font-bold mr-2" htmlFor="endDate">
+                  End Date <span className="text-red-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  className="task-end-date w-48 h-11 border border-solid-[2px] border-[#E2E2E2] hover:bg-gray-300 py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-semibold text-[#707070]"
+                  onClick={() => { setIsDatePickerOpen(!isDatePickerOpen); setActiveDatePicker('endDate'); }}
+                >
+                  {formatDate(endDate)}
+                </button>
+              </div>
+            </div>
+
+            <div className="task-frequency-days flex mb-4">
+              <div className="task-frequency flex-grow mr-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="frequency">
+                  Select Frequency <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="frequency"
+                  value={frequency}
+                  onChange={(e) => setFrequency(e.target.value)}
+                  required
+                  className="w-full"
+                >
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+
+              {frequency === 'weekly' && (
+                <div className="task-days-per-week flex-grow">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="daysPerWeek">
+                    Select Days Per Week <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="daysPerWeek"
+                    value={daysPerWeek}
+                    onChange={(e) => setDaysPerWeek(Number(e.target.value))}
+                    required
+                    className="w-full"
+                  >
+                    <option value="0">Select Days</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  {errors.daysPerWeek && <p className="text-red-500 text-sm">{errors.daysPerWeek}</p>}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="task-modal-actions mt-4">
+            <div className="task-modal-buttons flex gap-[17rem]">
+              <button
+                type="button"
+                className="task-cancel border border-solid border-[#CF3636] w-40 h-11 text-[#CF3636] py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline font-bold shadow-lg"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="task-save w-40 h-11 bg-[#17A2B8] text-white py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-bold"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        {isDatePickerOpen && (
+          <div
+            ref={datePickerRef}
+            className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+          >
+            <DatePicker
+              selected={activeDatePicker === 'startDate' ? startDate : endDate}
+              onChange={(date) => {
+                if (activeDatePicker === 'startDate') {
+                  setStartDate(date);
+                } else {
+                  setEndDate(date);
+                }
+                setIsDatePickerOpen(false);
+              }}
+              inline
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default CreateChallenge;

@@ -61,7 +61,7 @@ const ChallengeCard = ({ challenge }) => {
           <FaCircle size={10} className="mr-1" /> {status.toUpperCase()}
         </span>
         <span className="text-[10px] font-medium text-gray-500">
-        <FiEdit size={20} className="mr-1" onClick={handleEditClick} />
+        <FiEdit size={20} className="mr-1" onClick={(event) => handleEditClick(event, challenge)} />
 
         </span>
       </div>
