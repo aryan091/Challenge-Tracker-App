@@ -1,9 +1,29 @@
-// ProgressBar.js
-import React from 'react';
 
-const ProgressBar = ({ progress }) => {
-  const totalDays = progress.length;
-  const completedDays = progress.filter(day => day.completed).length;
+import React , {useContext, useEffect } from 'react';
+import { ChallengeContext } from '../context/ChallengeContext';
+
+const ProgressBar = ({id }) => {
+
+    const { challenges, updateChallenge } = useContext(ChallengeContext);
+    const challenge = challenges.find(c => c.id === id);
+
+    console.log(challenge)
+    
+
+
+    useEffect(() => {
+        localStorage.setItem('challenges', JSON.stringify(challenges));
+    }, [challenges]);
+    
+    
+
+
+  const totalDays =challenge?.progress?.length || 0;
+  console.log(" totalDays :",totalDays)
+  const completedDays = challenge.progress.filter(day => day.completed).length;
+
+  console.log(" completedDays :",completedDays)
+
   const percentage = totalDays === 0 ? 0 : (completedDays / totalDays) * 100;
 
   return (

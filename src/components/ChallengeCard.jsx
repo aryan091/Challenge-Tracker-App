@@ -1,17 +1,19 @@
-// ChallengeCard.js
-import React from 'react';
+import React , { useContext , useEffect , useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
 import ProgressBar from './ProgressBar'; 
 import { FiEdit } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
+import { ChallengeContext } from '../context/ChallengeContext';
 
 import './tooltip.css';
 
 const ChallengeCard = ({ challenge }) => {
-  const { title, description, startDate, endDate, status, progress } = challenge;
+  const { id ,title, description, startDate, endDate, status, progress , frequency } = challenge;
 
   const navigate = useNavigate();
+  const { updateChallenge } = useContext(ChallengeContext);
+
 
   const formatDateString = (dateString) => {
     if (!dateString) return ""; // Handle null or undefined dateString
@@ -52,19 +54,36 @@ const ChallengeCard = ({ challenge }) => {
     navigate('/create-challenge' , { state: { challenge: challenge, edit: true } })
 
   };
+
+  useEffect(() => {
+    const today = new Date();
+    if (new Date(endDate) < today) {
+      updateChallenge(id, { ...challenge, status: 'Missed' });
+    }
+  }, [ challenge, updateChallenge]);
+
+  function capitalizeFirstLetter(str) {
+    return str
+      .toLowerCase() // Convert the entire string to lowercase
+      .split(' ') // Split the string into an array of words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+      .join(' '); // Join the array back into a single string
+  }
+  
   
 
   return (
-    <div className="task-card p-4 bg-white rounded-lg shadow-sm relative w-72 h-44 mt-8">
+    <div className="task-card p-4 bg-white rounded-lg shadow-2xl relative w-72 h-50 mt-8">
       <div className="task-card-box flex items-center justify-between mb-2">
         <span className={`text-[10px] font-medium flex items-center ${status === 'Active' ? 'text-[#FF2473]' : status === 'Completed' ? 'text-[#18B0FF]' : 'text-[#63C05B]'}`}>
-          <FaCircle size={10} className="mr-1" /> {status.toUpperCase()}
+          <FaCircle size={10} className="mr-1 font-bold" /> {status.toUpperCase()}
         </span>
         <span className="text-[10px] font-medium text-gray-500">
         <FiEdit size={20} className="mr-1" onClick={(event) => handleEditClick(event, challenge)} />
 
         </span>
       </div>
+
       <div className='title min-w-60 max-h-[4.4rem] overflow-hidden'>
         <h4
           className="text-lg font-semibold mb-2"
@@ -87,6 +106,7 @@ const ChallengeCard = ({ challenge }) => {
           {title} {/* Content of the tooltip */}
         </Tooltip>
       </div>
+
       <div>
         <p
           className="text-sm text-gray-500 mb-2"
@@ -109,11 +129,17 @@ const ChallengeCard = ({ challenge }) => {
           {description} {/* Content of the tooltip */}
         </Tooltip>
       </div>
+
+
+        
+
       <div className="flex items-center justify-between text-sm">
         <button className={`w-16 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}>{formatDateString(startDate)}</button>
+        <button className={`w-28 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}>Frequency : {capitalizeFirstLetter(frequency)}</button>
+
         <button className={`w-16 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}>{formatDateString(endDate)}</button>
       </div>
-      <ProgressBar progress={progress} />
+      <ProgressBar id={id} progress={progress}/>
     </div>
   );
 };

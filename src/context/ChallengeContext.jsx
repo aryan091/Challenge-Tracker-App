@@ -1,28 +1,35 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 
 const ChallengeContext = createContext();
 
 const ChallengeProvider = ({ children }) => {
   const [challenges, setChallenges] = useState(() => {
-    const savedChallenges = localStorage.getItem('challenges');
-    return savedChallenges ? JSON.parse(savedChallenges) : [];
+    try {
+      const savedChallenges = localStorage.getItem('challenges');
+      return savedChallenges ? JSON.parse(savedChallenges) : [];
+    } catch (error) {
+      console.error('Failed to load challenges from localStorage:', error);
+      return [];
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem('challenges', JSON.stringify(challenges));
+    try {
+      localStorage.setItem('challenges', JSON.stringify(challenges));
+    } catch (error) {
+      console.error('Failed to save challenges to localStorage:', error);
+    }
   }, [challenges]);
 
   const updateChallenge = (id, updatedChallenge) => {
     setChallenges(prevChallenges =>
-        prevChallenges.map(challenge =>
-            challenge.id === id
-                ? { ...challenge, ...updatedChallenge }
-                : challenge
-        )
+      prevChallenges.map(challenge =>
+        challenge.id === id
+          ? { ...challenge, ...updatedChallenge }
+          : challenge
+      )
     );
-};
-
+  };
 
   const addChallenge = (newChallenge) => {
     setChallenges(prevChallenges => [...prevChallenges, newChallenge]);

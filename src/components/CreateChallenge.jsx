@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect , useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ChallengeContext } from '../context/ChallengeContext';
@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom'; 
 
 const CreateChallenge = ({ closeModal }) => {
-    const [id , setId] = useState(uuidv4());
+  const [id, setId] = useState(uuidv4());
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState(null);
@@ -15,36 +15,33 @@ const CreateChallenge = ({ closeModal }) => {
   const [daysPerWeek, setDaysPerWeek] = useState(0);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [activeDatePicker, setActiveDatePicker] = useState(null);
+  const [progress, setProgress] = useState([]);
   const [errors, setErrors] = useState({});
+  const [weeks, setWeeks] = useState([]);
 
-  const { addChallenge , challenges , updateChallenge } = useContext(ChallengeContext);
-
+  const { addChallenge, challenges, updateChallenge } = useContext(ChallengeContext);
   const datePickerRef = useRef(null);
-
   const { state } = useLocation();
 
   useEffect(() => {
     if (state?.challenge) {
-        const challengeToEdit = challenges.find(challenge => challenge.id === state.challenge.id);
-        if (challengeToEdit) {
-            setId(challengeToEdit.id);
-            setTitle(challengeToEdit.title);
-            setDescription(challengeToEdit.description);
-            setStartDate(new Date(challengeToEdit.startDate));
-            setEndDate(new Date(challengeToEdit.endDate));
-            setFrequency(challengeToEdit.frequency);
-            setDaysPerWeek(challengeToEdit.daysPerWeek);
-        }
+      const challengeToEdit = challenges.find(challenge => challenge.id === state.challenge.id);
+      if (challengeToEdit) {
+        setId(challengeToEdit.id);
+        setTitle(challengeToEdit.title);
+        setDescription(challengeToEdit.description);
+        setStartDate(new Date(challengeToEdit.startDate));
+        setEndDate(new Date(challengeToEdit.endDate));
+        setFrequency(challengeToEdit.frequency);
+        setDaysPerWeek(challengeToEdit.daysPerWeek);
+        // Set the progress state for the existing challenge
+        setProgress(challengeToEdit.progress || []);
+      }
     }
-}, [state?.challenge, challenges]);
-
+  }, [state?.challenge, challenges]);
 
   const handleClickOutside = (event) => {
-    if (
-      isDatePickerOpen &&
-      datePickerRef.current &&
-      !datePickerRef.current.contains(event.target)
-    ) {
+    if (isDatePickerOpen && datePickerRef.current && !datePickerRef.current.contains(event.target)) {
       setIsDatePickerOpen(false);
       setActiveDatePicker(null);
     }
@@ -80,7 +77,7 @@ const CreateChallenge = ({ closeModal }) => {
     return newErrors;
   };
 
-  
+
 
   const handleSaveTask = async (event) => {
     event.preventDefault();
@@ -99,16 +96,18 @@ const CreateChallenge = ({ closeModal }) => {
         frequency,
         daysPerWeek,
         status: 'Active',
-        progress: [],
-        
+        progress:[]
       };
+
+    
 
       if (state?.challenge) {
         updateChallenge(id, newTask); // Update the existing challenge
-    } else {
+      } else {
         addChallenge(newTask); // Add a new challenge
-    }
-closeModal();
+      }
+
+      closeModal();
     }
   };
 
@@ -161,7 +160,7 @@ closeModal();
                 </button>
               </div>
 
-              <div className="flex items-center mb-4" >
+              <div className="flex items-center mb-4">
                 <label className="text-gray-700 text-sm font-bold mr-2" htmlFor="endDate">
                   End Date <span className="text-red-500">*</span>
                 </label>
@@ -173,7 +172,27 @@ closeModal();
                   {formatDate(endDate)}
                 </button>
               </div>
+
+              {isDatePickerOpen && (
+                <div ref={datePickerRef} className="absolute z-50">
+                  <DatePicker
+                    selected={activeDatePicker === 'startDate' ? startDate : endDate}
+                    onChange={(date) => {
+                      if (activeDatePicker === 'startDate') {
+                        setStartDate(date);
+                      } else {
+                        setEndDate(date);
+                      }
+                      setIsDatePickerOpen(false);
+                      setActiveDatePicker(null);
+                    }}
+                    inline
+                  />
+                </div>
+              )}
             </div>
+            {errors.startDate && <p className="text-red-500 text-sm">{errors.startDate}</p>}
+            {errors.endDate && <p className="text-red-500 text-sm">{errors.endDate}</p>}
 
             <div className="task-frequency-days flex mb-4">
               <div className="task-frequency flex-grow mr-4">
@@ -230,32 +249,12 @@ closeModal();
                 type="submit"
                 className="task-save w-40 h-11 bg-[#17A2B8] text-white py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-bold"
               >
-                Save
+            {state?.challenge ? "Update " : "Save "}
+
               </button>
             </div>
           </div>
-
         </form>
-
-        {isDatePickerOpen && (
-          <div
-            ref={datePickerRef}
-            className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
-          >
-            <DatePicker
-              selected={activeDatePicker === 'startDate' ? startDate : endDate}
-              onChange={(date) => {
-                if (activeDatePicker === 'startDate') {
-                  setStartDate(date);
-                } else {
-                  setEndDate(date);
-                }
-                setIsDatePickerOpen(false);
-              }}
-              inline
-            />
-          </div>
-        )}
       </div>
     </div>
   );

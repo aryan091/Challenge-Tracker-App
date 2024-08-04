@@ -178,7 +178,7 @@ const Dashboard = () => {
           {challenges.length} <span className="stat-text-imp">Challenges Active</span>
         </h2>
       </div>
-      <div className="stat-box-ques">
+      <div className="stat-box-missed">
         <h2 className="stat-number-ques" style={{ lineHeight: "2rem" }}>
           {challenges.length} <span className="stat-text-ques">Challenges Missed</span>
         </h2>

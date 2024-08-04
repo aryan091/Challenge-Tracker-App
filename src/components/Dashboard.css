@@ -15,13 +15,14 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    
 }
 
 .stat-box{
     background-color: white;
     width: 18rem/* 288px */;
     height: 9rem/* 144px */;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .stat-number{
@@ -46,7 +47,16 @@
     background-color: white;
     width: 18rem/* 288px */;
     height: 9rem/* 144px */;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    text-align: center;
+
+}
+
+.stat-box-missed{
+    background-color: white;
+    width: 18rem/* 288px */;
+    height: 9rem/* 144px */;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     text-align: center;
 
 }
@@ -73,7 +83,7 @@
     background-color: white;
     width: 18rem/* 288px */;
     height: 9rem/* 144px */;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     text-align: center;
 }
 
