@@ -12,143 +12,11 @@ const Dashboard = () => {
 
     const navigate = useNavigate();
 
-    const { challenges } = useContext(ChallengeContext);
+    const { challenges , getStats } = useContext(ChallengeContext);
     
+    const stats = getStats();
 
-    const challengesMock = [
-        {
-            id: 'd2b8e978-7da6-4d54-a9c6-5ce1d28f8254',
-            title: 'Aryan',
-            description: '5 Km Daily',
-            startDate: '2024-08-02',
-            endDate: '2024-08-09',
-            frequency: 'daily',
-            daysPerWeek: 0,
-            status: 'Active',
-            progress: []
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda5b1fad',
-            title: 'Pari',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda5b1ffd',
-            title: 'Ankur',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda6b1ffd',
-            title: 'Ankur',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'd2b8e978-7da6-4d54-a9c6-5ce1d28f8254',
-            title: 'Aryan',
-            description: '5 Km Daily',
-            startDate: '2024-08-02',
-            endDate: '2024-08-09',
-            frequency: 'daily',
-            daysPerWeek: 0,
-            status: 'Active',
-            progress: []
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda5b1fad',
-            title: 'Pari',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda5b1ffd',
-            title: 'Ankur',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda6b1ffd',
-            title: 'Ankur',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'd2b8e978-7da6-4d54-a9c6-5ce1d28f8254',
-            title: 'Aryan',
-            description: '5 Km Daily',
-            startDate: '2024-08-02',
-            endDate: '2024-08-09',
-            frequency: 'daily',
-            daysPerWeek: 0,
-            status: 'Active',
-            progress: []
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda5b1fad',
-            title: 'Pari',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda5b1ffd',
-            title: 'Ankur',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          },
-          {
-            id: 'fbd22fc1-4f00-44af-93b8-f75bda6b1ffd',
-            title: 'Ankur',
-            description: '25 Km per week',
-            startDate: '2024-08-02',
-            endDate: '2024-08-18',
-            frequency: 'weekly',
-            daysPerWeek: '4',           
-            status: 'Active',
-            progress: [  ]
-          }
-    ]
+
 
     const handleCreateTaskClick = () => {
         navigate('/create-challenge');
@@ -157,30 +25,33 @@ const Dashboard = () => {
       const closeModal = () => {
         navigate('/');
       };
+
     
 
   return (
-    <div className="dashboard-container">
+    <div className="App overflow-x-hidden text-neutral-300 antialiased selection:bg-cyan-300 selection:text-cyan-900  ">
+
+        <div className="dashboard-container">
     {/* Statistics Section */}
     <div className="statistics-section">
       <div className="stat-box">
         <h2 className="stat-number " style={{ lineHeight: "2rem" }}>
-          {challenges.length} <span className="stat-text">Challenges Created</span>
+          {stats.totalChallenges} <span className="stat-text">Challenges Created</span>
         </h2>
       </div>
       <div className="stat-box-ques">
         <h2 className="stat-number-ques" style={{ lineHeight: "2rem" }}>
-          {challenges.length} <span className="stat-text-ques">Challenges Completed</span>
+          {stats.completedCount} <span className="stat-text-ques">Challenges Completed</span>
         </h2>
       </div>
       <div className="stat-box-imp">
         <h2 className="stat-number-imp " style={{ lineHeight: "2rem" }}>
-          {challenges.length} <span className="stat-text-imp">Challenges Active</span>
+          {stats.activeCount} <span className="stat-text-imp">Challenges Active</span>
         </h2>
       </div>
       <div className="stat-box-missed">
-        <h2 className="stat-number-ques" style={{ lineHeight: "2rem" }}>
-          {challenges.length} <span className="stat-text-ques">Challenges Missed</span>
+        <h2 className="stat-number-missed" style={{ lineHeight: "2rem" }}>
+          {stats.missedCount} <span className="stat-text-missed">Challenges Missed</span>
         </h2>
       </div>
 
@@ -190,15 +61,15 @@ const Dashboard = () => {
 
 
 
-    <div className='add-task mt-4 '>
-    <IoMdAdd size={24} className="cursor-pointer" onClick={handleCreateTaskClick} />
+    <div className='add-task mt-4  z-20'>
+    <IoMdAdd size={24} color="white" className="cursor-pointer z-20 " onClick={handleCreateTaskClick} />
 
     </div>
 
     <div className="challenge-list-section flex flex-row flex-wrap gap-6 mx-12 h-full w-full justify-center p-8">
     {
         challenges.map((challenge) => (
-         <Link to={`/challenge/${challenge.id}`} key={challenge.id}><ChallengeCard key={challenge.id} challenge={challenge} /></Link> 
+         <Link to={`/challenge/${challenge.id}`} key={challenge.id}><ChallengeCard key={challenge.id} id={challenge.id} /></Link> 
         ))
     }
     </div>
@@ -209,6 +80,8 @@ const Dashboard = () => {
     
 
     </div>
+    </div>
+
 )
 }
 

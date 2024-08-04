@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ChallengeContext } from '../context/ChallengeContext';
+import { formatCreateDate } from "../utils/helper";
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom'; 
 
@@ -18,6 +19,7 @@ const CreateChallenge = ({ closeModal }) => {
   const [progress, setProgress] = useState([]);
   const [errors, setErrors] = useState({});
   const [weeks, setWeeks] = useState([]);
+  const [createdAt ,setCreatedAt ] = useState(new Date().toLocaleDateString());
 
   const { addChallenge, challenges, updateChallenge } = useContext(ChallengeContext);
   const datePickerRef = useRef(null);
@@ -59,13 +61,7 @@ const CreateChallenge = ({ closeModal }) => {
     };
   }, [isDatePickerOpen]);
 
-  const formatDate = (date) => {
-    if (!date) return "Select Date";
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
-  };
+  
 
   const validateFields = () => {
     const newErrors = {};
@@ -91,11 +87,12 @@ const CreateChallenge = ({ closeModal }) => {
         id,
         title,
         description,
-        startDate: formatDate(startDate),
-        endDate: formatDate(endDate),
+        startDate: formatCreateDate(startDate),
+        endDate: formatCreateDate(endDate),
         frequency,
         daysPerWeek,
         status: 'Active',
+        createdAt,
         progress:[]
       };
 
@@ -113,7 +110,7 @@ const CreateChallenge = ({ closeModal }) => {
 
   return (
     <div className="task-modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
-      <div className="task-modal-content bg-white rounded-lg shadow-lg w-[644px] h-[596px] p-6 flex flex-col justify-between relative">
+      <div className="task-modal-content bg-white rounded-lg shadow-lg w-[350px] h-[596px] p-6 flex flex-col justify-between relative sm:w-[644px]">
         <form className="flex flex-col flex-grow" onSubmit={handleSaveTask}>
           <div className="flex-grow">
             <div className="task-title mb-4">
@@ -146,7 +143,7 @@ const CreateChallenge = ({ closeModal }) => {
               {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
             </div>
 
-            <div className="task-dates mt-8 flex flex-row mb-4 gap-4">
+            <div className="task-dates mt-8 flex flex-col mb-4 gap-4 sm:flex-row">
               <div className="flex items-center mb-4">
                 <label className="text-gray-700 text-sm font-bold mr-2" htmlFor="startDate">
                   Start Date <span className="text-red-500">*</span>
@@ -156,11 +153,11 @@ const CreateChallenge = ({ closeModal }) => {
                   className="task-start-date w-48 h-11 border border-solid-[2px] border-[#E2E2E2] hover:bg-gray-300 py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-semibold text-[#707070]"
                   onClick={() => { setIsDatePickerOpen(!isDatePickerOpen); setActiveDatePicker('startDate'); }}
                 >
-                  {formatDate(startDate)}
+                  {formatCreateDate(startDate)}
                 </button>
               </div>
 
-              <div className="flex items-center mb-4">
+              <div className="flex items-center mb-6">
                 <label className="text-gray-700 text-sm font-bold mr-2" htmlFor="endDate">
                   End Date <span className="text-red-500">*</span>
                 </label>
@@ -169,7 +166,7 @@ const CreateChallenge = ({ closeModal }) => {
                   className="task-end-date w-48 h-11 border border-solid-[2px] border-[#E2E2E2] hover:bg-gray-300 py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline shadow-lg font-semibold text-[#707070]"
                   onClick={() => { setIsDatePickerOpen(!isDatePickerOpen); setActiveDatePicker('endDate'); }}
                 >
-                  {formatDate(endDate)}
+                  {formatCreateDate(endDate)}
                 </button>
               </div>
 
@@ -204,10 +201,10 @@ const CreateChallenge = ({ closeModal }) => {
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
                   required
-                  className="w-full"
+                  className="w-full text-gray-700"
                 >
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
+                  <option value="daily" className="text-gray-700">Daily</option>
+                  <option value="weekly" className="text-gray-700">Weekly</option>
                 </select>
               </div>
 
@@ -221,14 +218,14 @@ const CreateChallenge = ({ closeModal }) => {
                     value={daysPerWeek}
                     onChange={(e) => setDaysPerWeek(Number(e.target.value))}
                     required
-                    className="w-full"
+                    className="w-full text-gray-700"
                   >
-                    <option value="0">Select Days</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <option value="0" className="text-gray-700">Select Days</option>
+                    <option value="1" className="text-gray-700">1</option>
+                    <option value="2" className="text-gray-700">2</option>
+                    <option value="3" className="text-gray-700">3</option>
+                    <option value="4" className="text-gray-700">4</option>
+                    <option value="5" className="text-gray-700">5</option>
                   </select>
                   {errors.daysPerWeek && <p className="text-red-500 text-sm">{errors.daysPerWeek}</p>}
                 </div>
@@ -237,7 +234,7 @@ const CreateChallenge = ({ closeModal }) => {
           </div>
 
           <div className="task-modal-actions mt-4">
-            <div className="task-modal-buttons flex gap-[17rem]">
+            <div className="task-modal-buttons flex gap-4 sm:gap-[17rem]">
               <button
                 type="button"
                 className="task-cancel border border-solid border-[#CF3636] w-40 h-11 text-[#CF3636] py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline font-bold shadow-lg"

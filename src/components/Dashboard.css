@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 10;
 }
 .statistics-section{
     display: flex;
@@ -15,6 +16,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    z-index: 10;
     
 }
 
@@ -72,10 +74,27 @@
     color: #60B84B;
 }
 
+.stat-number-missed{
+    text-align: center;
+    font-size: 3.75rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem/* 32px */;
+    padding-left: 1rem/* 16px */;
+    padding-right: 1rem/* 16px */;
+    font-weight: 700;
+    color: red;
+}
 .stat-text-ques{
     font-weight: 600;
     font-size: 1.875rem/* 30px */;
     color: #60B84B;
+
+}
+
+.stat-text-missed{
+    font-weight: 600;
+    font-size: 1.875rem/* 30px */;
+    color: red;
 
 }
 

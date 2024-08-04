@@ -5,46 +5,21 @@ import ProgressBar from './ProgressBar';
 import { FiEdit } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { ChallengeContext } from '../context/ChallengeContext';
+import { capitalizeFirstLetter , formatDateString} from '../utils/helper';
 
 import './tooltip.css';
 
-const ChallengeCard = ({ challenge }) => {
-  const { id ,title, description, startDate, endDate, status, progress , frequency } = challenge;
+const ChallengeCard = ({ id }) => {
+
+
 
   const navigate = useNavigate();
-  const { updateChallenge } = useContext(ChallengeContext);
+  const { challenges } = useContext(ChallengeContext);
+  const challenge = challenges.find(challenge => challenge.id === id);
+  const { title, description, startDate, endDate, status, progress , frequency } = challenge;
 
 
-  const formatDateString = (dateString) => {
-    if (!dateString) return ""; // Handle null or undefined dateString
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return ""; // Handle invalid date strings
-
-    const options = { day: 'numeric', month: 'short' };
-    const formatter = new Intl.DateTimeFormat('en-US', options);
-    const parts = formatter.formatToParts(date);
-    const month = parts.find(part => part.type === 'month').value;
-    const day = parts.find(part => part.type === 'day').value;
-    const dayWithSuffix = getDayWithSuffix(day);
-    return `${month} ${dayWithSuffix}`;
-  };
-
-  const getDayWithSuffix = (day) => {
-    if (day === '11' || day === '12' || day === '13') {
-      return `${day}th`;
-    }
-    const lastDigit = day.slice(-1);
-    switch (lastDigit) {
-      case '1':
-        return `${day}st`;
-      case '2':
-        return `${day}nd`;
-      case '3':
-        return `${day}rd`;
-      default:
-        return `${day}th`;
-    }
-  };
+  
 
   const handleEditClick = (event , challenge) => {
     event.preventDefault(); // Prevent default behavior
@@ -55,38 +30,25 @@ const ChallengeCard = ({ challenge }) => {
 
   };
 
-  useEffect(() => {
-    const today = new Date();
-    if (new Date(endDate) < today) {
-      updateChallenge(id, { ...challenge, status: 'Missed' });
-    }
-  }, [ challenge, updateChallenge]);
-
-  function capitalizeFirstLetter(str) {
-    return str
-      .toLowerCase() // Convert the entire string to lowercase
-      .split(' ') // Split the string into an array of words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
-      .join(' '); // Join the array back into a single string
-  }
+  
   
   
 
   return (
-    <div className="task-card p-4 bg-white rounded-lg shadow-2xl relative w-72 h-50 mt-8">
+    <div className="task-card p-4 bg-white rounded-lg shadow-2xl relative w-72 h-50 mt-8 transform transition-transform duration-500 ease-in-out hover:scale-105">
       <div className="task-card-box flex items-center justify-between mb-2">
-        <span className={`text-[10px] font-medium flex items-center ${status === 'Active' ? 'text-[#FF2473]' : status === 'Completed' ? 'text-[#18B0FF]' : 'text-[#63C05B]'}`}>
+        <span className={`text-[10px] font-medium flex items-center ${status === 'Active' ? 'text-[#FF2473]' : status === 'Completed' ? 'text-[#18B0FF]' : 'text-red-600'}`}>
           <FaCircle size={10} className="mr-1 font-bold" /> {status.toUpperCase()}
         </span>
         <span className="text-[10px] font-medium text-gray-500">
-        <FiEdit size={20} className="mr-1" onClick={(event) => handleEditClick(event, challenge)} />
+        <FiEdit size={20} color='blue' className="mr-1" onClick={(event) => handleEditClick(event, challenge)} />
 
         </span>
       </div>
 
       <div className='title min-w-60 max-h-[4.4rem] overflow-hidden'>
         <h4
-          className="text-lg font-semibold mb-2"
+          className="text-lg font-semibold mb-2 text-neutral-500"
           style={{
             maxHeight: '4.4rem',
             cursor: 'default',
