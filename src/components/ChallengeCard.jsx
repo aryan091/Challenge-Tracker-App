@@ -6,6 +6,8 @@ import { FiEdit } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { ChallengeContext } from '../context/ChallengeContext';
 import { capitalizeFirstLetter , formatDateString} from '../utils/helper';
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import DeleteTaskModal from './DeleteTaskModal';
 
 import './tooltip.css';
 
@@ -14,12 +16,19 @@ const ChallengeCard = ({ id }) => {
 
 
   const navigate = useNavigate();
+  const [isModalOpen , setIsModalOpen] = useState(false);
   const { challenges } = useContext(ChallengeContext);
   const challenge = challenges.find(challenge => challenge.id === id);
   const { title, description, startDate, endDate, status, progress , frequency } = challenge;
 
 
   
+  const handleDeleteClick = (event ) => {
+    event.preventDefault(); // Prevent default behavior
+    event.stopPropagation(); // Stop event from bubbling up
+    setIsModalOpen(true);
+  };
+
 
   const handleEditClick = (event , challenge) => {
     event.preventDefault(); // Prevent default behavior
@@ -40,10 +49,17 @@ const ChallengeCard = ({ id }) => {
         <span className={`text-[10px] font-medium flex items-center ${status === 'Active' ? 'text-[#FF2473]' : status === 'Completed' ? 'text-[#18B0FF]' : 'text-red-600'}`}>
           <FaCircle size={10} className="mr-1 font-bold" /> {status.toUpperCase()}
         </span>
+        <div className='edit flex items-center justify-between'>
         <span className="text-[10px] font-medium text-gray-500">
         <FiEdit size={20} color='blue' className="mr-1" onClick={(event) => handleEditClick(event, challenge)} />
-
         </span>
+
+        <span className="text-[10px] font-medium text-gray-500">
+        <RiDeleteBin5Fill size={20} color='red' className="mr-1" onClick={(event) => handleDeleteClick(event)} />
+        
+        </span>
+
+        </div>
       </div>
 
       <div className='title min-w-60 max-h-[4.4rem] overflow-hidden'>
@@ -102,7 +118,8 @@ const ChallengeCard = ({ id }) => {
         <button className={`w-16 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}>{formatDateString(endDate)}</button>
       </div>
       <ProgressBar id={id} progress={progress}/>
-    </div>
+      {isModalOpen && <DeleteTaskModal id={id} closeModal={() => setIsModalOpen(false)} />}
+      </div>
   );
 };
 

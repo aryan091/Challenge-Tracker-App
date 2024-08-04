@@ -34,6 +34,13 @@ const ChallengeProvider = ({ children }) => {
         });
       };
             
+const deleteChallenge = (id) => {
+  setChallenges(prevChallenges => {
+    const updatedChallenges = prevChallenges.filter(challenge => challenge.id !== id);
+    localStorage.setItem('challenges', JSON.stringify(updatedChallenges));
+    return updatedChallenges;
+  });
+};
 
   const addChallenge = (newChallenge) => {
     setChallenges(prevChallenges => [...prevChallenges, newChallenge]);
@@ -49,7 +56,7 @@ const ChallengeProvider = ({ children }) => {
   };
 
   return (
-    <ChallengeContext.Provider value={{ challenges, updateChallenge,setChallenges, addChallenge, getStats }}>
+    <ChallengeContext.Provider value={{ challenges, updateChallenge,setChallenges, addChallenge, getStats , deleteChallenge}}>
       {children}
     </ChallengeContext.Provider>
   );
