@@ -4,7 +4,7 @@ import { ChallengeContext } from "../context/ChallengeContext";
 import ProgressBar from "./ProgressBar";
 import { formatDate, convertDateFormat, getDaysByWeek } from "../utils/helper";
 import { IoIosArrowBack } from "react-icons/io";
-import DayItem from "./DayItem";
+import DayItem from "./DayItem"
 import "./custom-scrollbar.css";
 
 const ChallengeDetail = () => {
