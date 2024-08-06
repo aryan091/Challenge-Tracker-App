@@ -1,6 +1,15 @@
 import React from 'react';
 
 const DayItem = ({ item, onStatusChange }) => {
+  /**
+   * Handles the change event of the checkbox.
+   *
+   * This function is called when the checkbox is checked or unchecked.
+   * It updates the status of the item by calling the `onStatusChange` function
+   * with the item's date and the negation of its current completed status.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleCheckboxChange = () => {
     onStatusChange(item.date, !item.completed);
   };
