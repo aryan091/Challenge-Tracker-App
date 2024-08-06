@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a challenge management application built with React and Redux Toolkit. Users can create, update, delete, and filter challenges based on their status (Active, Completed, Missed).
+This is a challenge management application built with React and Context API. Users can create, update, delete, and filter challenges based on their status (Active, Completed, Missed).
 
 ## Features
 
