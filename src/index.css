@@ -1,3 +1,5 @@
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,7 +21,7 @@
 
 /* For WebKit browsers */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 2px; /* Adjust the width for vertical scrollbar */
+  width: 8px; /* Adjust the width for vertical scrollbar */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -30,7 +32,7 @@
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #736f6f;
   border-radius: 10px;
-  border: 1px solid #0a0a0a;
+  border: 3px solid #0a0a0a;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
