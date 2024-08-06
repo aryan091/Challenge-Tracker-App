@@ -44,7 +44,7 @@ npm run dev
 yarn run dev
 ```
 
-The app will be available at `http://localhost:3000`.
+The app will be available at `http://localhost:PORT`.
 
 # Project Structure
 - src/components: Contains React components such as Dashboard, ChallengeCard, CreateChallenge, ChallengeDetail.
