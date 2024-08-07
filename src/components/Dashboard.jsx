@@ -121,7 +121,7 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col w-[100vw] h-[100vh] ">
       {/* Challenge List Section */}
-      <div className="flex flex-col overflow-y-auto p-4 max-w-[100vw] max-h-[100vh]  overflow-hidden custom-scrollbar z-20">
+      <div className="flex flex-col overflow-y-auto p-4 max-w-[100vw] max-h-[100vh]  overflow-hidden  z-20">
         <div className="flex justify-center  flex-col sm:flex-row sm:justify-around sm:items-center gap-4 ">
           <div>
             <p
@@ -170,13 +170,13 @@ const Dashboard = () => {
         </div>
 
         {/* Challenge List Section */}
-        <div className="flex flex-col mx-4 sm:mx-20 p-4 max-w-[100vw] max-h-[100vh]  z-20">
+        <div className="flex flex-col mx-4 sm:mx-20 p-2 max-w-[100vw] max-h-[100vh]  z-20 overflow-hidden ">
           {sortedChallenges.length === 0 ? (
-            <div className="flex justify-center items-center h-full text-xl text-purple-100 font-bold mx-auto">
+            <div className="flex justify-center items-center  text-xl text-purple-100 font-bold mx-auto mt-60 ">
               No Challenges
             </div>
           ) : (
-            <div className="challenge-list flex flex-wrap gap-6 justify-center sm:justify-start mx-auto z-20">
+            <div className="challenge-list p-4 flex flex-wrap gap-6 justify-center sm:justify-start mx-auto z-20 overflow-y-auto custom-scrollbar">
               {sortedChallenges.map((challenge) => (
                 <Link to={`/challenge/${challenge.id}`} key={challenge.id}>
                   <ChallengeCard id={challenge.id} />

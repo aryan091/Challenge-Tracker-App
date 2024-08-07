@@ -1,5 +1,4 @@
 .custom-scrollbar {
-    scrollbar-width: 8px;
     scrollbar-color: #736f6f #373434; /* For WebKit */
   
   
@@ -8,7 +7,7 @@
   /* For WebKit browsers */
   .custom-scrollbar::-webkit-scrollbar {
     height: 12px; /* Adjust the height for horizontal scrollbar */
-    width: 8px; /* Adjust the width for vertical scrollbar */
+    width: 2px; /* Adjust the width for vertical scrollbar */
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
