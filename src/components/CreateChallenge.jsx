@@ -242,6 +242,8 @@ const CreateChallenge = ({ closeModal }) => {
                       setActiveDatePicker(null);
                     }}
                     inline
+                    minDate={new Date()} // Disable all dates before today
+
                   />
                 </div>
               )}
