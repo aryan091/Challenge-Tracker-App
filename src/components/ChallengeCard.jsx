@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { FaCircle } from "react-icons/fa";
 import { Tooltip } from "react-tooltip";
 import ProgressBar from "./ProgressBar";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ChallengeContext } from "../context/ChallengeContext";
 import { capitalizeFirstLetter, formatDateString } from "../utils/helper";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import { FaRegCalendarAlt } from "react-icons/fa";
 
 import "./tooltip.css";
 
@@ -162,15 +163,24 @@ const ChallengeCard = ({ id }) => {
       </div>
 
       <div className="flex items-center justify-between text-sm">
+      {/* <button
+          className={`w-28 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}
+        >
+          Frequency : {capitalizeFirstLetter(frequency)}
+        </button> */}
+        <div className="flex items-center gap-2">        
+          <FaRegCalendarAlt size={20} className=" font-bold" color="blue" />
+        <span className="font-bold text-neutral-500"> 
+        - {capitalizeFirstLetter(frequency)}
+
+        </span>
+        </div>
+
+
         <button
           className={`w-16 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}
         >
           {formatDateString(startDate)}
-        </button>
-        <button
-          className={`w-28 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}
-        >
-          Frequency : {capitalizeFirstLetter(frequency)}
         </button>
 
         <button
