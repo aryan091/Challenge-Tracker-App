@@ -56,7 +56,7 @@ The app will be available at `http://localhost:PORT`.
 - Click the "Create" button.
 - Fill out the form with the challenge details.
 - Click "Save" to add the challenge.
-- 
+
 # Editing an Existing Challenge
 - Click on the challenge you want to edit.
 - Update the details in the form.
