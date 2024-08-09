@@ -66,6 +66,8 @@ const ChallengeDetail = () => {
       initialProgress = [initialProgress];
     }
 
+    console.log("Intital Progess :",initialProgress);
+
     updateChallenge(challengeId, { ...challenge, progress: initialProgress });
   };
 

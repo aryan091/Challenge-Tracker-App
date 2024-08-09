@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const DayItem = ({ item, onStatusChange }) => {
   /**
@@ -14,6 +14,15 @@ const DayItem = ({ item, onStatusChange }) => {
     onStatusChange(item.date, !item.completed);
   };
 
+  const [disable , setDisable] = useState(true)
+
+  useEffect(() => {
+    const today = new Date();
+    if(item.date === today.toISOString().split('T')[0]){
+      setDisable(false)
+    }
+  }, [item]);
+
   return (
     <div className="day-item flex items-center justify-between mb-2 p-2 shadow-sm rounded-md">
       <span className="mr-4 text-gray-700 font-medium">{item.date}</span>
@@ -21,7 +30,9 @@ const DayItem = ({ item, onStatusChange }) => {
         type="checkbox"
         checked={item.completed}
         onChange={handleCheckboxChange}
-        className="form-checkbox h-5 w-5 text-green-500"
+        className="form-checkbox h-5 w-5 text-green-500 "
+        disabled={disable}
+      
       />
     </div>
   );

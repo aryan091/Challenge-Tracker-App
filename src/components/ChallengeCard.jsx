@@ -163,11 +163,6 @@ const ChallengeCard = ({ id }) => {
       </div>
 
       <div className="flex items-center justify-between text-sm">
-      {/* <button
-          className={`w-28 h-7 text-[10px] rounded-xl bg-gray-200 text-[#5A5A5A] font-bold`}
-        >
-          Frequency : {capitalizeFirstLetter(frequency)}
-        </button> */}
         <div className="flex items-center gap-2">        
           <FaRegCalendarAlt size={20} className=" font-bold" color="blue" />
         <span className="font-bold text-neutral-500"> 
